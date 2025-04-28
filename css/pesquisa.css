@@ -1,0 +1,148 @@
+.filter-form {
+    background: #fff;
+    padding: 0.2rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+}
+
+.filter-form-content {
+    margin-bottom: 15px;
+}
+
+.filter-form-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    padding: 0.5rem;
+}
+
+.filter-form-group input,
+.filter-form-group select {
+    width: 100%;
+    padding: 0.55rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.87rem;
+    color: #4b5563;
+    background-color: #fff;
+    transition: all 0.2s ease-in-out;
+}
+
+.filter-form-group input:focus,
+.filter-form-group select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.filter-form-group input::placeholder {
+    color: #9ca3af;
+}
+
+.filter-form-buttons {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem;
+    justify-content: flex-start;
+}
+
+.btn-filter {
+    padding: 0.5rem 0.6rem;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 0.8rem;
+    transition: all 0.2s ease-in-out;
+    min-width: 120px;
+    max-width: 200px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-filter-primary {
+    background-color: #2563eb;
+    color: white;
+}
+
+.btn-filter-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-filter-secondary {
+    background-color: red;
+    color: white;
+}
+
+.btn-filter-secondary:hover {
+    background-color: darkred;
+}
+
+.date-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.date-input-container input[type="date"] {
+    width: 100%;
+    padding: 0.55rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 0.87rem;
+    color: #4b5563;
+    background-color: #fff;
+    transition: all 0.2s ease-in-out;
+}
+
+.date-label {
+    position: absolute;
+    top: -20px;
+    left: 0;
+    font-size: 0.8rem;
+    color: #4b5563;
+    font-weight: 500;
+}
+
+/* Estilo para o ícone do calendário nativo */
+.date-input-container input[type="date"]::-webkit-calendar-picker-indicator {
+    background-color: transparent;
+    padding: 5px;
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+.date-input-container input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+/* Remover borda ao focar */
+.date-input-container input[type="date"]:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Estilo placeholder quando a data não está selecionada */
+.date-input-container input[type="date"]:invalid {
+    color: #9ca3af;
+}
+
+@media (max-width: 768px) {
+    .filter-form {
+        padding: 1rem;
+    }
+    
+    .filter-form-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .filter-form-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-filter {
+        width: 100%;
+        max-width: 100%;
+    }
+}

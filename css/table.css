@@ -1,0 +1,155 @@
+/* Estilos para a tabela de vendas */
+.table-responsive-sm {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+}
+
+.table th, .table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.table td {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Ícones de ações */
+.fa-lg {
+    font-size: 1.5em;
+}
+
+.color-primary {
+    color: #007bff;
+}
+
+.color-invoice {
+    color: #28a745;
+}
+
+.color-warning {
+    color: #ffc107;
+}
+
+.color-danger {
+    color: #dc3545;
+}
+
+/* Detalhes da venda - Estilo card moderno */
+.details-container {
+    background-color: #ffffff; /* Fundo branco puro */
+    padding: 25px;
+    border-radius: 12px;
+    margin-top: 20px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave para criar profundidade */
+    border: 1px solid #e0e0e0; /* Borda leve */
+    max-width: 700px; /* Limitar a largura para centralizar */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Títulos dos detalhes */
+.details-container h6 {
+    font-weight: bold;
+    font-size: 20px; /* Aumentar o tamanho do título */
+    margin-bottom: 20px;
+    color: #343a40; /* Cor escura elegante */
+    border-bottom: 2px solid #007bff; /* Barra abaixo do título para destaque */
+    padding-bottom: 10px;
+}
+
+/* Lista de itens e parcelas */
+.details-container ul {
+    list-style: none; /* Remove bullets */
+    padding-left: 0;
+    margin: 0;
+}
+
+.details-container li {
+    padding: 15px 0;
+    font-size: 16px;
+    color: #495057;
+    border-bottom: 1px solid #e9ecef; /* Divisão leve entre os itens */
+    display: flex; /* Flexbox para facilitar o layout */
+    justify-content: space-between; /* Espaçar os itens vendidos e parcelas */
+}
+
+.details-container li:last-child {
+    border-bottom: none; /* Remover a borda do último item */
+}
+
+/* Estilo dos textos */
+.details-container strong {
+    color: #007bff; /* Cor de destaque para textos importantes */
+    font-weight: bold;
+}
+
+.details-container .subitem {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px; /* Tamanho menor para subtítulos */
+    color: #6c757d; /* Cinza suave */
+}
+
+/* Estilo do total */
+.details-container .total {
+    font-size: 24px; /* Destaque maior para o total */
+    color: #28a745; /* Cor verde vibrante */
+    font-weight: bold;
+    text-align: right;
+}
+
+/* Efeito de hover nos itens */
+.details-container li:hover {
+    background-color: #f8f9fa; /* Cor de fundo ao passar o mouse */
+    transition: background-color 0.3s ease; /* Transição suave */
+}
+
+/* Estilo das etiquetas (labels) */
+.details-container .label {
+    font-size: 14px;
+    background-color: #007bff; /* Cor azul intensa */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px; /* Borda arredondada para estilo de etiqueta */
+    font-weight: 500;
+}
+
+/* Espaçamento entre as seções */
+.details-container .section {
+    margin-top: 30px;
+}
+
+.details-container p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #343a40;
+    margin-top: 15px;
+    text-align: right;
+}
+
+/* Alinhamento geral */
+.text-right {
+    text-align: right;
+}
+
+
+
+/* Hover para as linhas */
+.table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Alinhamento centralizado */
+.text-center {
+    text-align: center;
+}

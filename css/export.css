@@ -1,0 +1,38 @@
+.export-buttons {
+    display: flex;
+    gap: 10px; /* Espaçamento entre os botões */
+}
+
+.export-buttons .btn {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-decoration: none;
+    color: white;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.export-buttons .btn-success {
+    background-color: #28a745;
+}
+
+.export-buttons .btn-info {
+    background-color: #17a2b8;
+}
+
+.export-buttons .btn-danger {
+    background-color: #dc3545; 
+}
+
+.export-buttons .btn-success:hover {
+    background-color: #218838;
+}
+
+.export-buttons .btn-info:hover {
+    background-color: #138496;
+    color: white;
+}
+
+.export-buttons .btn-danger:hover {
+    background-color: #c82333;
+}

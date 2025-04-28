@@ -12,7 +12,7 @@ Sweet-alert JS
     }, document.querySelector(".sweet-text").onclick = function () {
         swal("Hey, Here's a message !!", "It's pretty, isn't it?")
     }, document.querySelector(".sweet-success").onclick = function () {
-        swal("Hey, Good job !!", "You clicked the button !!", "success")
+        swal("Produto Cadastrado!!", "Seu produto foi cadastrado, clique no botão!!", "success")
     }, document.querySelector(".sweet-confirm").onclick = function () {
         swal({
             title: "Are you sure to delete ?",

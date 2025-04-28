@@ -5,11 +5,31 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Focus - Bootstrap Admin Dashboard </title>
+    <title>Sistema - Neo Enigma </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/logocima.png">
     <!-- Custom Stylesheet -->
     <link href="./css/style.css" rel="stylesheet">
+    <style>
+    .button-container {
+        display: flex;
+        gap: 10px; /* Ajuste o valor conforme necessário */
+        margin-left: 15px;
+    }
+    .btn-cancel {
+        background-color: red; /* Verde claro */
+        border: none;
+        color: white;
+    }
+
+    .btn-cancel:hover {
+        background-color: #c70000;
+        color: white; /* Verde escuro para efeito hover */
+    }
+    </style>
 
 </head>
 
@@ -63,95 +83,17 @@
                 <nav class="navbar navbar-expand">
                     <div class="collapse navbar-collapse justify-content-between">
                         <div class="header-left">
-                            <div class="search_bar dropdown">
-                                <span class="search_icon p-3 c-pointer" data-toggle="dropdown">
-                                    <i class="mdi mdi-magnify"></i>
-                                </span>
-                                <div class="dropdown-menu p-0 m-0">
-                                    <form>
-                                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                                    </form>
-                                </div>
-                            </div>
                         </div>
 
                         <ul class="navbar-nav header-right">
-                            <li class="nav-item dropdown notification_dropdown">
-                                <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                                    <i class="mdi mdi-bell"></i>
-                                    <div class="pulse-css"></div>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <ul class="list-unstyled">
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-user"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Martin</strong> has added a <strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-shopping-cart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Jennifer</strong> purchased Light Dashboard 2.0.</p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="danger"><i class="ti-bookmark"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Robin</strong> marked a <strong>ticket</strong> as unsolved.
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-heart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>David</strong> purchased Light Dashboard 1.0.</p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-image"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong> James.</strong> has added a<strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                    </ul>
-                                    <a class="all-notification" href="#">See all notifications <i
-                                            class="ti-arrow-right"></i></a>
-                                </div>
-                            </li>
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="#" role="button" data-toggle="dropdown">
                                     <i class="mdi mdi-account"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="./app-profile.html" class="dropdown-item">
-                                        <i class="icon-user"></i>
-                                        <span class="ml-2">Profile </span>
-                                    </a>
-                                    <a href="./email-inbox.html" class="dropdown-item">
-                                        <i class="icon-envelope-open"></i>
-                                        <span class="ml-2">Inbox </span>
-                                    </a>
-                                    <a href="./page-login.html" class="dropdown-item">
+                                    <a href="logout.php" class="dropdown-item">
                                         <i class="icon-key"></i>
-                                        <span class="ml-2">Logout </span>
+                                        <span class="ml-2">Sair</span>
                                     </a>
                                 </div>
                             </li>
@@ -178,16 +120,10 @@
         <div class="content-body">
             <div class="container-fluid">
                 <div class="row page-titles mx-0">
-                    <div class="col-sm-6 p-md-0">
-                        <div class="welcome-text">
-                            <h4>Hi, welcome back!</h4>
-                            <span class="ml-1">Element</span>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                    <div class="col-sm-12 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Element</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Fornecedores</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Formulário Fornecedores</a></li>
                         </ol>
                     </div>
                 </div>
@@ -210,6 +146,24 @@
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
+                                            <label>CNPJ</label>
+                                            <input onkeypress="mascaraCNPJ(this)" maxlength="18" type="text" class="form-control" name="txt_cnpj" id="txt_cnpj" placeholder="__.___.___/____-__">
+                                        </div>
+
+                                        <script>
+                                            function mascaraCNPJ(input) {
+                                                let value = input.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+                                                if (value.length <= 14) {
+                                                    value = value.replace(/^(\d{2})(\d)/, '$1.$2'); // Adiciona ponto após os 2 primeiros dígitos
+                                                    value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3'); // Adiciona ponto após o bloco de 5 dígitos
+                                                    value = value.replace(/\.(\d{3})(\d)/, '.$1/$2'); // Adiciona barra após o bloco de 8 dígitos
+                                                    value = value.replace(/(\d{4})(\d)/, '$1-$2'); // Adiciona hífen após o bloco de 12 dígitos
+                                                }
+                                                input.value = value;
+                                            }
+                                        </script>
+
+                                        <div class="col-lg-12 mb-4">
                                             <label>Descrição</label>
                                             <textarea class="form-control" rows="4" name="txt_descricao" id="txt_descricao" placeholder="Faça uma Breve Descrição do Fornecedor"></textarea>
                                         </div>
@@ -221,19 +175,94 @@
 
                                         <div class="col-lg-12 mb-4">
                                             <label>Telefone</label>
-                                            <input type="number" class="form-control" name="txt_telefone" id="txt_telefone" placeholder="Digite o Telefone do Fornecedor">
+                                            <input onkeypress="mascara(this, telefone)" maxlength="8" type="text" class="form-control" name="txt_telefone" id="txt_telefone" placeholder="____-____">
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
                                             <label>Celular</label>
-                                            <input type="number" class="form-control" name="txt_celular" id="txt_celular" placeholder="Digite o Celular do Fornecedor">
+                                            <input onkeypress="mascara(this, celular)" maxlength="15" type="text" class="form-control" name="txt_celular" id="txt_celular" placeholder="() _____-____">
                                         </div>
 
-                                        <div class="col-lg-12 mb-4">
-                                            <button type="submit" id="btn_salvar" class="btn btn-primary">Cadastrar</button>
+                                        <div class="button-container">
+                                            <button type="button" id="btn_cancelar" class="btn btn-cancel">Cencelar</button>
+                                            <button type="submit" id="btn_salvar1" class="btn btn-primary">Cadastrar</button>
                                         </div>
+
+                                        <script>
+                                            document.getElementById("btn_cancelar").addEventListener("click", function() {
+                                                // Redireciona para um script PHP que configura a sessão
+                                                window.location.href = "set_session.php"; // Substitua com a URL do seu script PHP
+                                                document.forms["frm_fornecedor"].reset();
+                                            });
+                                        </script>
 
                                     </form>
+                                    <script>
+                                        function validarFormularioFornecedor() {
+                                            let isValid = true;
+
+                                            // Função para destacar campos vazios
+                                            function destacarCampo(campo) {
+                                                campo.style.borderColor = "red";
+                                                campo.focus();
+                                                isValid = false;
+                                            }
+
+                                            // Função para remover o destaque
+                                            function removerDestaque(campo) {
+                                                campo.style.borderColor = "";
+                                            }
+
+                                            // Campos obrigatórios
+                                            const nome = document.getElementById('txt_nome');
+                                            const cnpj = document.getElementById('txt_cnpj');
+                                            const descricao = document.getElementById('txt_descricao');
+                                            const email = document.getElementById('txt_email');
+                                            const celular = document.getElementById('txt_celular');
+
+                                            // Verificando se os campos estão preenchidos
+                                            if (nome.value === "") {
+                                                destacarCampo(nome);
+                                            } else {
+                                                removerDestaque(nome);
+                                            }
+
+                                            if (cnpj.value === "" || cnpj.value.length < 18) {
+                                                destacarCampo(cnpj);
+                                            } else {
+                                                removerDestaque(cnpj);
+                                            }
+
+                                            if (descricao.value === "") {
+                                                destacarCampo(descricao);
+                                            } else {
+                                                removerDestaque(descricao);
+                                            }
+
+                                            if (email.value === "") {
+                                                destacarCampo(email);
+                                            } else {
+                                                removerDestaque(email);
+                                            }
+
+                                            if (celular.value === "" || celular.value.length < 15) {
+                                                destacarCampo(celular);
+                                            } else {
+                                                removerDestaque(celular);
+                                            }
+
+                                            return isValid;  // Impede o envio se algum campo obrigatório estiver vazio
+                                        }
+
+                                        // Adicionando o evento ao botão de salvar
+                                        document.getElementById('btn_salvar1').addEventListener('click', function(event) {
+                                            event.preventDefault(); // Impede o envio do formulário até a verificação
+                                            if (validarFormularioFornecedor()) {
+                                                document.forms['frm_fornecedor'].submit(); // Submete o formulário se estiver válido
+                                            }
+                                        });
+
+                                    </script>
                                 </div>
                             </div>
 
@@ -253,7 +282,7 @@
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Quixkit</a> 2019</p>
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Neo Enigma</a> 2024</p>
             </div>
         </div>
         <!--**********************************
@@ -281,6 +310,8 @@
     <script src="./vendor/global/global.min.js"></script>
     <script src="./js/quixnav-init.js"></script>
     <script src="./js/custom.min.js"></script>
+    <script src="https://unpkg.com/imask"></script>
+    <script src="js/mask.js"></script>
     
 </body>
 

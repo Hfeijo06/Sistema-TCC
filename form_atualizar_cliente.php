@@ -16,11 +16,30 @@ $dados = mysqli_fetch_array($sql);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Focus - Bootstrap Admin Dashboard </title>
+    <title>Sistema - Neo Enigma </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/logocima.png">
     <!-- Custom Stylesheet -->
     <link href="./css/style.css" rel="stylesheet">
+    <style>
+    .button-container {
+        display: flex;
+        gap: 10px; /* Ajuste o valor conforme necessário */
+        margin-left: 15px;
+    }
+    .btn-cancel {
+        background-color: red; /* Verde claro */
+        border: none;
+        color: white;
+    }
+
+    .btn-cancel:hover {
+        background-color: #c70000;
+        color: white; /* Verde escuro para efeito hover */
+    }
+    </style>
 
 </head>
 
@@ -74,90 +93,17 @@ $dados = mysqli_fetch_array($sql);
                 <nav class="navbar navbar-expand">
                     <div class="collapse navbar-collapse justify-content-between">
                         <div class="header-left">
-                            <div class="search_bar dropdown">
-                                <span class="search_icon p-3 c-pointer" data-toggle="dropdown">
-                                    <i class="mdi mdi-magnify"></i>
-                                </span>
-                                <div class="dropdown-menu p-0 m-0">
-                                    <form>
-                                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                                    </form>
-                                </div>
-                            </div>
                         </div>
 
                         <ul class="navbar-nav header-right">
-                            <li class="nav-item dropdown notification_dropdown">
-                                <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                                    <i class="mdi mdi-bell"></i>
-                                    <div class="pulse-css"></div>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <ul class="list-unstyled">
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-user"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Martin</strong> has added a <strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-shopping-cart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Jennifer</strong> purchased Light Dashboard 2.0.</p>
-                                                </a>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="danger"><i class="ti-bookmark"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Robin</strong> marked a <strong>ticket</strong> as unsolved.
-                                                    </p>
-                                                </a>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-heart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>David</strong> purchased Light Dashboard 1.0.</p>
-                                                </a>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-image"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong> James.</strong> has added a<strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                    </ul>
-                                    <a class="all-notification" href="#">See all notifications <i
-                                            class="ti-arrow-right"></i></a>
-                                </div>
-                            </li>
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="#" role="button" data-toggle="dropdown">
                                     <i class="mdi mdi-account"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="./app-profile.html" class="dropdown-item">
-                                        <i class="icon-user"></i>
-                                        <span class="ml-2">Profile </span>
-                                    </a>
-                                    <a href="./email-inbox.html" class="dropdown-item">
-                                        <i class="icon-envelope-open"></i>
-                                        <span class="ml-2">Inbox </span>
-                                    </a>
-                                    <a href="./page-login.html" class="dropdown-item">
+                                    <a href="logout.php" class="dropdown-item">
                                         <i class="icon-key"></i>
-                                        <span class="ml-2">Logout </span>
+                                        <span class="ml-2">Sair</span>
                                     </a>
                                 </div>
                             </li>
@@ -177,6 +123,71 @@ $dados = mysqli_fetch_array($sql);
         <!--**********************************
             Sidebar end
         ***********************************-->
+        <script>
+            
+            function limpa_formulário_cep() {
+                    //Limpa valores do formulário de cep.
+                    document.getElementById('txt_rua').value=("");
+                    document.getElementById('txt_bairro').value=("");
+                    document.getElementById('txt_cidade').value=("");
+            }
+
+            function meu_callback(conteudo) {
+                if (!("erro" in conteudo)) {
+                    //Atualiza os campos com os valores.
+                    document.getElementById('txt_rua').value=(conteudo.logradouro);
+                    document.getElementById('txt_bairro').value=(conteudo.bairro);
+                    document.getElementById('txt_cidade').value=(conteudo.localidade);
+                } //end if.
+                else {
+                    //CEP não Encontrado.
+                    limpa_formulário_cep();
+                    alert("CEP não encontrado.");
+                }
+            }
+                
+            function pesquisacep(valor) {
+
+                //Nova variável "cep" somente com dígitos.
+                var cep = valor.replace(/\D/g, '');
+
+                //Verifica se campo cep possui valor informado.
+                if (cep != "") {
+
+                    //Expressão regular para validar o CEP.
+                    var validacep = /^[0-9]{8}$/;
+
+                    //Valida o formato do CEP.
+                    if(validacep.test(cep)) {
+
+                        //Preenche os campos com "..." enquanto consulta webservice.
+                        document.getElementById('txt_rua').value="...";
+                        document.getElementById('txt_bairro').value="...";
+                        document.getElementById('txt_cidade').value="...";
+
+                        //Cria um elemento javascript.
+                        var script = document.createElement('script');
+
+                        //Sincroniza com o callback.
+                        script.src = 'https://viacep.com.br/ws/'+ cep + '/json/?callback=meu_callback';
+
+                        //Insere script no documento e carrega o conteúdo.
+                        document.body.appendChild(script);
+
+                    } //end if.
+                    else {
+                        //cep é inválido.
+                        limpa_formulário_cep();
+                        alert("Formato de CEP inválido.");
+                    }
+                } //end if.
+                else {
+                    //cep sem valor, limpa formulário.
+                    limpa_formulário_cep();
+                }
+            };
+
+            </script>
 
         <!--**********************************
             Content body start
@@ -185,15 +196,11 @@ $dados = mysqli_fetch_array($sql);
             <div class="container-fluid">
                 <div class="row page-titles mx-0">
                     <div class="col-sm-6 p-md-0">
-                        <div class="welcome-text">
-                            <h4>Hi, welcome back!</h4>
-                            <span class="ml-1">Element</span>
-                        </div>
                     </div>
                     <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Element</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Atualizar</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Atualizar Cliente</a></li>
                         </ol>
                     </div>
                 </div>
@@ -212,7 +219,7 @@ $dados = mysqli_fetch_array($sql);
 
                                         <div class="col-lg-12 mb-4">
                                             <label>Código</label>
-                                            <input type="text" class="form-control" placeholder="" disabled value="<?php echo $dados['cli_codigo']; ?>">
+                                            <input type="text" class="form-control" placeholder="" name="txt_codigo" id="txt_codigo" readonly value="<?php echo $dados['cli_codigo']; ?>">
                                         </div>
                                     
                                         <div class="col-lg-12 mb-4">
@@ -222,39 +229,61 @@ $dados = mysqli_fetch_array($sql);
 
                                         <div class="col-lg-12 mb-4">
                                             <label>RG</label>
-                                            <input type="text" class="form-control" name="txt_rg" id="txt_rg" placeholder="Digite o RG do Cliente" value="<?php echo $dados['cli_rg']; ?>">
+                                            <input onkeydown="const mask = IMask(rg, maskOptions);" maxlength="14" type="text" class="form-control" name="txt_rg" id="txt_rg" placeholder="Digite o RG do Cliente" value="<?php echo $dados['cli_rg']; ?>">
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
                                             <label>CPF</label>
-                                            <input type="text" class="form-control" name="txt_cpf" id="txt_cpf" placeholder="Digite o CPF do Cliente" value="<?php echo $dados['cli_cpf']; ?>">
+                                            <input onkeypress="mascara(this, cpf)" maxlength="14" type="text" class="form-control" name="txt_cpf" id="txt_cpf" placeholder="Digite o CPF do Cliente" value="<?php echo $dados['cli_cpf']; ?>">
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
                                             <label>CEP</label>
-                                            <input type="text" class="form-control" name="txt_cep" id="txt_cep" placeholder="Digite o CEP do Cliente" value="<?php echo $dados['cli_cep']; ?>">
+                                            <input onblur="pesquisacep(this.value)" onkeypress="mascara(this, cep)" maxlength="9" type="text" class="form-control" name="txt_cep" id="txt_cep" placeholder="Digite o CEP do Cliente" value="<?php echo $dados['cli_cep']; ?>">
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
-                                            <label>Endereço</label>
-                                            <input type="text" class="form-control" name="txt_endereco" id="txt_endereco" placeholder="Digite o Endereço do Cliente" value="<?php echo $dados['cli_endereco']; ?>">
+                                            <label>Rua</label>
+                                            <input type="text" class="form-control" name="txt_rua" id="txt_rua" placeholder="Digite a Rua do Cliente" value="<?php echo $dados['cli_rua']; ?>">
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
-                                            <label>Celular</label>
-                                            <input type="text" class="form-control" name="txt_celular" id="txt_celular" placeholder="Digite o Celular do Cliente" value="<?php echo $dados['cli_celular']; ?>">
+                                            <label>Bairro</label>
+                                            <input type="text" class="form-control" name="txt_bairro" id="txt_bairro" placeholder="Digite o Bairro do Cliente" value="<?php echo $dados['cli_bairro']; ?>">
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label>Número</label>
+                                            <input type="text" class="form-control" name="txt_numero" id="txt_numero" placeholder="Digite o Número da casa do Cliente"value="<?php echo $dados['cli_numero']; ?>">
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label>Cidade</label>
+                                            <input type="text" class="form-control" name="txt_cidade" id="txt_cidade" placeholder="Digite a Cidade do Cliente" value="<?php echo $dados['cli_cidade']; ?>">
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label>Complemento</label>
+                                            <input type="text" class="form-control" name="txt_complemento" id="txt_complemento" placeholder="Digite o Complemento" value="<?php echo $dados['cli_complemento']; ?>">
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
                                             <label>Telefone</label>
-                                            <input type="text" class="form-control" name="txt_telefone" id="txt_telefone" placeholder="Digite o Telefone do Cliente" value="<?php echo $dados['cli_telefone']; ?>">
+                                            <input onkeypress="mascara(this, telefone)" maxlength="8" type="text" class="form-control" name="txt_telefone" id="txt_telefone" placeholder="____-____" value="<?php echo $dados['cli_telefone']; ?>">
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
-                                            <button type="submit" id="btn_salvar" class="btn btn-primary">Atualizar</button>
+                                            <label>Celular</label>
+                                            <input onkeypress="mascara(this, celular)" maxlength="15" type="text" class="form-control" name="txt_celular" id="txt_celular" placeholder="() _____-____" value="<?php echo $dados['cli_celular']; ?>">
+                                        </div>
+
+                                        <div class="button-container">
+                                            <button type="submit" id="btn_cancelar" name="btn_cancelar" class="btn btn-cancel">Cencelar</button>
+                                            <button type="submit" id="btn_salvar1" class="btn btn-primary">Atualizar</button>
                                         </div>
 
                                     </form>
+
                                 </div>
                             </div>
 
@@ -274,7 +303,7 @@ $dados = mysqli_fetch_array($sql);
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Quixkit</a> 2019</p>
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Neo Enigma</a> 2024</p>
             </div>
         </div>
         <!--**********************************
@@ -302,6 +331,8 @@ $dados = mysqli_fetch_array($sql);
     <script src="./vendor/global/global.min.js"></script>
     <script src="./js/quixnav-init.js"></script>
     <script src="./js/custom.min.js"></script>
+    <script src="https://unpkg.com/imask"></script>
+    <script src="js/mask.js"></script>
     
 </body>
 

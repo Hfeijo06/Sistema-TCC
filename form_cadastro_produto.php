@@ -1,3 +1,11 @@
+<?php
+require_once('conexao/banco.php');
+
+$sql = "select * from tb_fornecedores where for_codigo != 7";
+$sql = mysqli_query($con, $sql) or die ("Erro na sql!") ;
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,11 +13,31 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Focus - Bootstrap Admin Dashboard </title>
+    <title>Sistema - Neo Enigma </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/logocima.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+
     <!-- Custom Stylesheet -->
     <link href="./css/style.css" rel="stylesheet">
+    <style>
+    .button-container {
+        display: flex;
+        gap: 10px; /* Ajuste o valor conforme necessário */
+        margin-left: 15px;
+    }
+    .btn-cancel {
+    background-color: red; /* Verde claro */
+    border: none;
+    color: white;
+    }
+
+    .btn-cancel:hover {
+        background-color: #c70000;
+        color: white; /* Verde escuro para efeito hover */
+    }
+    </style>
 
 </head>
 
@@ -63,95 +91,17 @@
                 <nav class="navbar navbar-expand">
                     <div class="collapse navbar-collapse justify-content-between">
                         <div class="header-left">
-                            <div class="search_bar dropdown">
-                                <span class="search_icon p-3 c-pointer" data-toggle="dropdown">
-                                    <i class="mdi mdi-magnify"></i>
-                                </span>
-                                <div class="dropdown-menu p-0 m-0">
-                                    <form>
-                                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                                    </form>
-                                </div>
-                            </div>
                         </div>
 
                         <ul class="navbar-nav header-right">
-                            <li class="nav-item dropdown notification_dropdown">
-                                <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                                    <i class="mdi mdi-bell"></i>
-                                    <div class="pulse-css"></div>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <ul class="list-unstyled">
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-user"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Martin</strong> has added a <strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-shopping-cart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Jennifer</strong> purchased Light Dashboard 2.0.</p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="danger"><i class="ti-bookmark"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Robin</strong> marked a <strong>ticket</strong> as unsolved.
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-heart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>David</strong> purchased Light Dashboard 1.0.</p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-image"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong> James.</strong> has added a<strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                    </ul>
-                                    <a class="all-notification" href="#">See all notifications <i
-                                            class="ti-arrow-right"></i></a>
-                                </div>
-                            </li>
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="#" role="button" data-toggle="dropdown">
                                     <i class="mdi mdi-account"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="./app-profile.html" class="dropdown-item">
-                                        <i class="icon-user"></i>
-                                        <span class="ml-2">Profile </span>
-                                    </a>
-                                    <a href="./email-inbox.html" class="dropdown-item">
-                                        <i class="icon-envelope-open"></i>
-                                        <span class="ml-2">Inbox </span>
-                                    </a>
-                                    <a href="./page-login.html" class="dropdown-item">
+                                    <a href="logout.php" class="dropdown-item">
                                         <i class="icon-key"></i>
-                                        <span class="ml-2">Logout </span>
+                                        <span class="ml-2">Sair</span>
                                     </a>
                                 </div>
                             </li>
@@ -178,16 +128,10 @@
         <div class="content-body">
             <div class="container-fluid">
                 <div class="row page-titles mx-0">
-                    <div class="col-sm-6 p-md-0">
-                        <div class="welcome-text">
-                            <h4>Hi, welcome back!</h4>
-                            <span class="ml-1">Element</span>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                    <div class="col-sm-12 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Element</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Produtos</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Formulário de Produtos</a></li>
                         </ol>
                     </div>
                 </div>
@@ -202,7 +146,24 @@
                             <div class="card-body">
                                 <div class="basic-form">
 
-                                    <form name="frm_produto" method="post" action="cadastro/cadastro_produto.php">
+                                    <form name="frm_produto" method="post" action="cadastro/cadastro_produto.php" id="frm_produto">
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label>Fornecedor</label>
+                                            <div class="form-group">
+                                                <?php 
+                                                // Supondo que você já tenha buscado os fornecedores do banco de dados
+                                                while ($dados = mysqli_fetch_array($sql)) { ?>
+                                                    <div class="form-check mb-2">
+                                                        <input type="checkbox" class="form-check-input" name="txt_fornecedores[]" id="fornecedor_<?php echo $dados['for_codigo']; ?>" value="<?php echo $dados['for_codigo']; ?>">
+                                                        <label class="form-check-label" for="fornecedor_<?php echo $dados['for_codigo']; ?>">
+                                                            <?php echo $dados['for_descricao']; ?>
+                                                        </label>
+                                                    </div>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+
 
                                         <div class="col-lg-12 mb-4">
                                             <label>Nome</label>
@@ -234,20 +195,79 @@
 
                                         <div class="col-lg-12 mb-4">
                                             <label>Preço</label>
-                                            <input type="number" class="form-control" name="txt_preco" id="txt_preco" placeholder="Digite o Preço do Produto">
+                                            <input type="text" class="form-control" name="txt_preco" id="txt_preco" placeholder="Digite o Preço do Produto">
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
                                             <label>Validade</label>
-                                            <input type="date" class="form-control" name="txt_validade" id="txt_validade" placeholder="Digite a Validade do Produto">
+                                            <input onkeypress="mascara(this, mdata)" type="date" class="form-control" name="txt_validade" id="txt_validade" placeholder="Digite a Validade do Produto">
                                         </div>
 
 
-                                        <div class="col-lg-12 mb-4">
-                                            <button type="submit" id="btn_salvar" class="btn btn-primary">Cadastrar</button>
+                                        <div class="button-container">
+                                            <button type="button" id="btn_cancelar" class="btn btn-cancel">Cencelar</button>
+                                            <button type="submit" id="btn_salvar1" class="btn btn-primary">Cadastrar</button>
                                         </div>
 
                                     </form>
+                                    <script>
+                                        document.getElementById("btn_salvar1").addEventListener("click", function(event) {
+                                            event.preventDefault(); // Impede o envio automático do formulário
+
+                                            // Obtém os valores dos campos
+                                            var nome = document.getElementById("txt_nome");
+                                            var descricao = document.getElementById("txt_descricao");
+                                            var preco = document.getElementById("txt_preco");
+                                            var validade = document.getElementById("txt_validade");
+
+                                            var valid = true; // Para verificar se o formulário é válido
+
+                                            // Função para adicionar borda vermelha e focar no campo
+                                            function marcarErro(campo) {
+                                                campo.style.borderColor = 'red'; // Adiciona borda vermelha
+                                                if (valid) {
+                                                    campo.focus(); // Foca no primeiro campo inválido
+                                                    valid = false; // Define como inválido
+                                                }
+                                            }
+
+                                            // Verifica se os campos obrigatórios estão preenchidos
+                                            if (nome.value === "") {
+                                                marcarErro(nome);
+                                            } else {
+                                                nome.style.border = ''; // Remove borda vermelha se estiver correto
+                                            }
+
+                                            if (descricao.value === "") {
+                                                marcarErro(descricao);
+                                            } else {
+                                                descricao.style.border = ''; // Remove borda vermelha se estiver correto
+                                            }
+
+                                            if (preco.value === "" || preco.value <= 0) {
+                                                marcarErro(preco);
+                                            } else {
+                                                preco.style.border = ''; // Remove borda vermelha se estiver correto
+                                            }
+
+                                            if (validade.value === "") {
+                                                marcarErro(validade);
+                                            } else {
+                                                validade.style.border = ''; // Remove borda vermelha se estiver correto
+                                            }
+
+                                            // Se o formulário estiver válido, envia o formulário
+                                            if (valid) {
+                                                document.getElementById("frm_produto").submit();
+                                            }
+                                        });
+
+                                        document.getElementById("btn_cancelar").addEventListener("click", function() {
+                                            // Redireciona para um script PHP que configura a sessão
+                                            window.location.href = "set_session.php"; // Substitua com a URL do seu script PHP
+                                            document.forms["frm_produto"].reset();
+                                        });
+                                    </script>
                                 </div>
                             </div>
 
@@ -267,7 +287,7 @@
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Quixkit</a> 2019</p>
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Neo Enigma</a> 2024</p>
             </div>
         </div>
         <!--**********************************

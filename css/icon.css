@@ -1,0 +1,50 @@
+.color-warning {
+    color: #ffc107; /* Amarelo para o ícone de editar */
+    transition: color 0.3s, transform 0.3s; /* Transição suave */
+}
+
+.color-warning:hover {
+    color: #ffca28; /* Cor ao passar o mouse */
+    transform: scale(1.2); /* Aumenta o tamanho do ícone */
+}
+
+.color-danger {
+    color: #dc3545; /* Vermelho para o ícone de fechar */
+    transition: color 0.3s, transform 0.3s; /* Transição suave */
+}
+
+.color-danger:hover {
+    color: #e57373; /* Cor ao passar o mouse */
+    transform: scale(1.2); /* Aumenta o tamanho do ícone */
+}   
+.color-success {
+    color: #28a745; /* Verde para o ícone de marcar como pago */
+    transition: color 0.3s, transform 0.3s; /* Transição suave */
+  }
+  
+  .color-success:hover {
+    color: #4caf50; /* Cor ao passar o mouse */
+    transform: scale(1.2); /* Aumenta o tamanho do ícone */
+  }
+  .color-primary {
+    color: #007bff; /* Azul para o ícone de consulta */
+    transition: color 0.3s, transform 0.3s; /* Transição suave */
+}
+
+.color-primary:hover {
+    color: #1e90ff; /* Azul mais claro ao passar o mouse */
+    transform: scale(1.2); /* Aumenta o tamanho do ícone */
+}
+
+.color-invoice {
+    color: #17a2b8; /* Azul-água para o ícone de comprovante */
+    transition: color 0.3s, transform 0.3s; /* Transição suave */
+}
+
+.color-invoice:hover {
+    color: #1abc9c; /* Cor ao passar o mouse */
+    transform: scale(1.2); /* Aumenta o tamanho do ícone */
+}
+
+
+  

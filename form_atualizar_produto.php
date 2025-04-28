@@ -1,13 +1,26 @@
 <?php
-
 require_once('conexao/banco.php');
 
 $id = $_REQUEST['pro_codigo'];
-$sql = "select * from tb_produtos where pro_codigo = '$id'";
-$sql = mysqli_query($con, $sql) or die ("Erro na sql!") ;
-$dados = mysqli_fetch_array($sql);
 
+// Captura os dados do produto
+$sqlProduto = "SELECT * FROM tb_produtos WHERE pro_codigo = '$id'";
+$sqlProdutoResult = mysqli_query($con, $sqlProduto) or die("Erro na sql!");
+$dadosProduto = mysqli_fetch_array($sqlProdutoResult);
+
+// Consulta para listar fornecedores, excluindo o fornecedor com código 7
+$sql = "SELECT * FROM tb_fornecedores WHERE for_codigo != 7";
+$sqlFornecedores = mysqli_query($con, $sql) or die("Erro na sql!");
+
+// Captura os fornecedores já associados ao produto
+$sqlFornecedoresProduto = "SELECT for_codigo FROM tb_produto_fornecedor WHERE pro_codigo = '$id'";
+$sqlFornecedoresProdutoResult = mysqli_query($con, $sqlFornecedoresProduto) or die("Erro na sql!");
+$fornecedoresAssociados = [];
+while ($row = mysqli_fetch_array($sqlFornecedoresProdutoResult)) {
+    $fornecedoresAssociados[] = $row['for_codigo'];
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,9 +29,11 @@ $dados = mysqli_fetch_array($sql);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Focus - Bootstrap Admin Dashboard </title>
+    <title>Sistema - Neo Enigma </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/logocima.png">
     <!-- Custom Stylesheet -->
     <link href="./css/style.css" rel="stylesheet">
 
@@ -74,95 +89,18 @@ $dados = mysqli_fetch_array($sql);
                 <nav class="navbar navbar-expand">
                     <div class="collapse navbar-collapse justify-content-between">
                         <div class="header-left">
-                            <div class="search_bar dropdown">
-                                <span class="search_icon p-3 c-pointer" data-toggle="dropdown">
-                                    <i class="mdi mdi-magnify"></i>
-                                </span>
-                                <div class="dropdown-menu p-0 m-0">
-                                    <form>
-                                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                                    </form>
-                                </div>
-                            </div>
                         </div>
 
                         <ul class="navbar-nav header-right">
-                            <li class="nav-item dropdown notification_dropdown">
-                                <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                                    <i class="mdi mdi-bell"></i>
-                                    <div class="pulse-css"></div>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <ul class="list-unstyled">
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-user"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Martin</strong> has added a <strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-shopping-cart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Jennifer</strong> purchased Light Dashboard 2.0.</p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="danger"><i class="ti-bookmark"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Robin</strong> marked a <strong>ticket</strong> as unsolved.
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-heart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>David</strong> purchased Light Dashboard 1.0.</p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-image"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong> James.</strong> has added a<strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                    </ul>
-                                    <a class="all-notification" href="#">See all notifications <i
-                                            class="ti-arrow-right"></i></a>
-                                </div>
-                            </li>
+                            
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="#" role="button" data-toggle="dropdown">
                                     <i class="mdi mdi-account"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="./app-profile.html" class="dropdown-item">
-                                        <i class="icon-user"></i>
-                                        <span class="ml-2">Profile </span>
-                                    </a>
-                                    <a href="./email-inbox.html" class="dropdown-item">
-                                        <i class="icon-envelope-open"></i>
-                                        <span class="ml-2">Inbox </span>
-                                    </a>
-                                    <a href="./page-login.html" class="dropdown-item">
+                                    <a href="logout.php" class="dropdown-item">
                                         <i class="icon-key"></i>
-                                        <span class="ml-2">Logout </span>
+                                        <span class="ml-2">Sair</span>
                                     </a>
                                 </div>
                             </li>
@@ -190,15 +128,11 @@ $dados = mysqli_fetch_array($sql);
             <div class="container-fluid">
                 <div class="row page-titles mx-0">
                     <div class="col-sm-6 p-md-0">
-                        <div class="welcome-text">
-                            <h4>Hi, welcome back!</h4>
-                            <span class="ml-1">Element</span>
-                        </div>
                     </div>
                     <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Element</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Atualizar</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Atualizar Produto</a></li>
                         </ol>
                     </div>
                 </div>
@@ -212,87 +146,71 @@ $dados = mysqli_fetch_array($sql);
 
                             <div class="card-body">
                                 <div class="basic-form">
-
                                     <form name="frm_produto" method="post" action="atualizar/atualizar_produto.php">
 
-                                        <div class="col-lg-12 mb-4">
-                                            <label>Código</label>
-                                            <input type="text" class="form-control" placeholder="" disabled value="<?php echo $dados['pro_codigo']; ?>">
+
+                                    <div class="col-lg-12 mb-4">
+                                        <div class="form-group">
+                                            <label>Fornecedor</label>
+                                            <?php while ($fornecedor = mysqli_fetch_array($sqlFornecedores)) { ?>
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="fornecedor_<?php echo $fornecedor['for_codigo']; ?>" 
+                                                        name="txt_fornecedor[]" 
+                                                        value="<?php echo $fornecedor['for_codigo']; ?>"
+                                                        <?php if (in_array($fornecedor['for_codigo'], $fornecedoresAssociados)) echo 'checked'; ?>>
+                                                    <label class="form-check-label" for="fornecedor_<?php echo $fornecedor['for_codigo']; ?>">
+                                                        <?php echo $fornecedor['for_descricao']; ?>
+                                                    </label>
+                                                </div>
+                                            <?php } ?>
                                         </div>
-                                    
+                                    </div>
+
                                         <div class="col-lg-12 mb-4">
                                             <label>Nome</label>
-                                            <input type="text" class="form-control" name="txt_nome" id="txt_nome" placeholder="Digite o Nome do Produto" value="<?php echo $dados['pro_nome']; ?>">
+                                            <input type="text" class="form-control" name="txt_nome" id="txt_nome" value="<?php echo $dadosProduto['pro_nome']; ?>" required>
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
                                             <label>Descrição</label>
-                                            <textarea class="form-control" rows="4" name="txt_descricao" id="txt_descricao" placeholder="Faça uma Breve Descrição do Produto" value="<?php echo $dados['pro_descricao']; ?>"></textarea>
+                                            <textarea class="form-control" rows="4" name="txt_descricao" id="txt_descricao" required><?php echo $dadosProduto['pro_descricao']; ?></textarea>
                                         </div>
 
-                                        <?php
-                                        if ($dados['pro_tipo'] == 'Água') {
-                                        ?>
-                                            <fieldset class="col-lg-12 mb-4">
-                                                <div class="row">
-                                                    <label class="col-form-label col-sm-2 pt-0">Tipo do Produto</label>
-                                                    <div class="col-lg-12 mb-4">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="txt_tipo" id="txt_tipo" value="Água" checked>
-                                                            <label class="form-check-label">
-                                                                Água
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="txt_tipo" id="txt_tipo" value="Gás">
-                                                            <label class="form-check-label">
-                                                                Gás
-                                                            </label>
-                                                        </div>
-                                                    </div>
+                                        <fieldset class="form-group">
+                                            <label class="col-form-label col-sm-2 pt-0">Tipo do Produto</label>
+                                            <div class="col-lg-12 mb-4">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="txt_tipo" id="tipo_agua" value="Água" 
+                                                        <?php if ($dadosProduto['pro_tipo'] == 'Água') echo 'checked'; ?>>
+                                                    <label class="form-check-label" for="tipo_agua">Água</label>
                                                 </div>
-                                            </fieldset>
-                                        <?php
-                                        } elseif ($dados['pro_tipo'] == 'Gás') {
-                                        ?>
-                                            <fieldset class="col-lg-12 mb-4">
-                                                <div class="row">
-                                                    <label class="col-form-label col-sm-2 pt-0">Tipo do Produto</label>
-                                                    <div class="col-lg-12 mb-4">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="txt_tipo" id="txt_tipo" value="Água">
-                                                            <label class="form-check-label">
-                                                                Água
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="txt_tipo" id="txt_tipo" value="Gás" checked>
-                                                            <label class="form-check-label">
-                                                                Gás
-                                                            </label>
-                                                        </div>
-                                                    </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" name="txt_tipo" id="tipo_gas" value="Gás" 
+                                                        <?php if ($dadosProduto['pro_tipo'] == 'Gás') echo 'checked'; ?>>
+                                                    <label class="form-check-label" for="tipo_gas">Gás</label>
                                                 </div>
-                                            </fieldset>
-                                        <?php
-                                        }
-                                        ?>
+                                            </div>
+                                        </fieldset>
 
                                         <div class="col-lg-12 mb-4">
                                             <label>Preço</label>
-                                            <input type="text" class="form-control" name="txt_preco" id="txt_preco" placeholder="Digite o Preço do Produto" value="<?php echo $dados['pro_preco']; ?>">
+                                            <input type="text" class="form-control" name="txt_preco" id="txt_preco" value="<?php echo $dadosProduto['pro_preco']; ?>" required>
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
                                             <label>Validade</label>
-                                            <input type="date" class="form-control" name="txt_validade" id="txt_validade" placeholder="Digite a Validade do Produto" value="<?php echo $dados['pro_validade']; ?>">
+                                            <input type="date" class="form-control" name="txt_validade" id="txt_validade" value="<?php echo $dadosProduto['pro_validade']; ?>" required>
                                         </div>
 
-                                        <div class="col-lg-12 mb-4">
+                                        <input type="hidden" name="txt_codigo" value="<?php echo $dadosProduto['pro_codigo']; ?>">
+
+                                        <div class="button-container">
+                                            <button type="button" id="btn_cancelar" class="btn btn-cancel">Cancelar</button>
                                             <button type="submit" id="btn_salvar" class="btn btn-primary">Atualizar</button>
                                         </div>
 
                                     </form>
+
                                 </div>
                             </div>
 
@@ -312,7 +230,7 @@ $dados = mysqli_fetch_array($sql);
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Quixkit</a> 2019</p>
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Neo Enigma</a> 2024</p>
             </div>
         </div>
         <!--**********************************

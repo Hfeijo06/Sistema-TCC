@@ -1,7 +1,22 @@
 <?PHP
+session_start(); // Inicia a sessão
 
 require_once('conexao/banco.php');
-$sql = "select * from tb_fornecedores";
+
+$cliente = isset($_REQUEST['for_cliente']) ? $_REQUEST['for_cliente'] : '';
+$telefone = isset($_REQUEST['for_celular']) ? $_REQUEST['for_celular'] : '';
+$email = isset($_REQUEST['for_email']) ? $_REQUEST['for_email'] : '';
+$descricao = isset($_REQUEST['for_descricao']) ? $_REQUEST['for_descricao'] : '';
+$cnpj = isset($_REQUEST['for_cnpj']) ? $_REQUEST['for_cnpj'] : '';
+
+$sql = "select * from tb_fornecedores where for_nome like '%".$cliente."%' AND
+        for_celular like '%".$telefone."%' AND
+        for_email like '%".$email."%' AND
+        for_descricao like '%".$descricao."%' AND
+        for_cnpj like '%".$cnpj."%' AND
+        for_codigo != 7
+        ORDER BY for_codigo DESC";
+
 $sql = mysqli_query($con, $sql) or die ("Erro na sql!") ;
 
 ?>
@@ -13,15 +28,48 @@ $sql = mysqli_query($con, $sql) or die ("Erro na sql!") ;
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Focus - Bootstrap Admin Dashboard </title>
+    <title>Sistema - Neo Enigma </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/logocima.png">
     <!-- Custom Stylesheet -->
+    <link href="./css/pesquisa.css" rel="stylesheet"> 
+    <link href="./css/form.css" rel="stylesheet">
+    <link href="./css/export.css" rel="stylesheet">
+    <link href="./css/table.css" rel="stylesheet">
+    <link href="./css/icon.css" rel="stylesheet">
     <link href="./css/style.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <!-- Adicione a biblioteca do Toastr -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Biblioteca Toastr -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 </head>
 
 <body>
+
+<?php
+    if (isset($_SESSION['success_message'])) {
+        // Exibe a notificação com a mensagem da sessão
+        echo "<script>
+            $(document).ready(function () {
+                toastr.success('" . $_SESSION['success_message'] . "', 'Sucesso', {
+                    positionClass: 'toast-top-right',
+                    timeOut: 5000,
+                    closeButton: true,
+                    progressBar: true
+                });
+            });
+        </script>";
+        // Limpa a mensagem da sessão após exibi-la
+        unset($_SESSION['success_message']);
+    }
+    ?>
+
 
     <!--*******************
         Preloader start
@@ -71,95 +119,17 @@ $sql = mysqli_query($con, $sql) or die ("Erro na sql!") ;
                 <nav class="navbar navbar-expand">
                     <div class="collapse navbar-collapse justify-content-between">
                         <div class="header-left">
-                            <div class="search_bar dropdown">
-                                <span class="search_icon p-3 c-pointer" data-toggle="dropdown">
-                                    <i class="mdi mdi-magnify"></i>
-                                </span>
-                                <div class="dropdown-menu p-0 m-0">
-                                    <form>
-                                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                                    </form>
-                                </div>
-                            </div>
                         </div>
 
                         <ul class="navbar-nav header-right">
-                            <li class="nav-item dropdown notification_dropdown">
-                                <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                                    <i class="mdi mdi-bell"></i>
-                                    <div class="pulse-css"></div>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <ul class="list-unstyled">
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-user"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Martin</strong> has added a <strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-shopping-cart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Jennifer</strong> purchased Light Dashboard 2.0.</p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="danger"><i class="ti-bookmark"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Robin</strong> marked a <strong>ticket</strong> as unsolved.
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-heart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>David</strong> purchased Light Dashboard 1.0.</p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-image"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong> James.</strong> has added a<strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                    </ul>
-                                    <a class="all-notification" href="#">See all notifications <i
-                                            class="ti-arrow-right"></i></a>
-                                </div>
-                            </li>
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="#" role="button" data-toggle="dropdown">
                                     <i class="mdi mdi-account"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="./app-profile.html" class="dropdown-item">
-                                        <i class="icon-user"></i>
-                                        <span class="ml-2">Profile </span>
-                                    </a>
-                                    <a href="./email-inbox.html" class="dropdown-item">
-                                        <i class="icon-envelope-open"></i>
-                                        <span class="ml-2">Inbox </span>
-                                    </a>
-                                    <a href="./page-login.html" class="dropdown-item">
+                                    <a href="logout.php" class="dropdown-item">
                                         <i class="icon-key"></i>
-                                        <span class="ml-2">Logout </span>
+                                        <span class="ml-2">Sair</span>
                                     </a>
                                 </div>
                             </li>
@@ -187,15 +157,11 @@ $sql = mysqli_query($con, $sql) or die ("Erro na sql!") ;
             <div class="container-fluid">
                 <div class="row page-titles mx-0">
                     <div class="col-sm-6 p-md-0">
-                        <div class="welcome-text">
-                            <h4>Hi, welcome back!</h4>
-                            <p class="mb-0">Your business dashboard template</p>
-                        </div>
                     </div>
                     <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">Table</a></li>
-                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Bootstrap</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Fornecedor</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Consulta Fornecedor</a></li>
                         </ol>
                     </div>
                 </div>
@@ -204,16 +170,124 @@ $sql = mysqli_query($con, $sql) or die ("Erro na sql!") ;
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Consulta de Fornecedores</h4>
-                            </div>
+                            <h4 class="card-header">
+                                Consulta de Fornecedores
+                                <a href="form_cadastro_fornecedor.php">
+                                    <button name="btn_salvar" class="btn-cadastro mb-1 float-right">+</button>
+                                </a>
+                            </h4>
                             <div class="card-body">
                                 <div class="table-responsive">
+                                <form name="frm_exportar" method="GET">
+                                        <input type="hidden" name="relatorio" value="fornecedores">
+                                        <input type="hidden" name="for_cliente" value="<?php echo htmlspecialchars($cliente); ?>">
+                                        <input type="hidden" name="for_celular" value="<?php echo htmlspecialchars($telefone); ?>">
+                                        <input type="hidden" name="for_email" value="<?php echo htmlspecialchars($email); ?>">
+                                        <input type="hidden" name="for_descricao" value="<?php echo htmlspecialchars($descricao); ?>">
+                                        <input type="hidden" name="for_cnpj" value="<?php echo htmlspecialchars($cnpj); ?>">
+
+                                        <div class="export-buttons mb-3">
+                                            <button type="button" id="exportPdf" class="btn btn-danger">Exportar para PDF</button>
+                                            <button type="button" id="exportExcel" class="btn btn-success">Exportar para Excel</button>
+                                        </div>
+                                    </form>
+
+                                    <script>
+                                        document.getElementById('exportPdf').addEventListener('click', function () {
+                                            // Mostra o SweetAlert de confirmação para PDF
+                                            Swal.fire({
+                                                title: 'Tem certeza?',
+                                                text: "Você deseja realmente exportar os dados para PDF?",
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3085d6',
+                                                cancelButtonColor: '#d33',
+                                                confirmButtonText: 'Sim, exportar!',
+                                                cancelButtonText: 'Cancelar'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    // Se o usuário confirmar, envia o formulário para PDF
+                                                    document.forms['frm_exportar'].action = "export/export_pdf.php";
+                                                    document.forms['frm_exportar'].submit();
+                                                }
+                                            });
+                                        });
+
+                                        document.getElementById('exportExcel').addEventListener('click', function () {
+                                            // Mostra o SweetAlert de confirmação para Excel
+                                            Swal.fire({
+                                                title: 'Tem certeza?',
+                                                text: "Você deseja realmente exportar os dados para Excel?",
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#3085d6',
+                                                cancelButtonColor: '#d33',
+                                                confirmButtonText: 'Sim, exportar!',
+                                                cancelButtonText: 'Cancelar'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    // Se o usuário confirmar, envia o formulário para Excel
+                                                    document.forms['frm_exportar'].action = "export/export_excel.php";
+                                                    document.forms['frm_exportar'].submit();
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                    <form name="frm_consulta" method="GET" action="" class="filter-form">
+                                        <div class="filter-form-content">
+                                            <div class="filter-form-group">
+                                                <input name="for_cliente" type="text" id="cliente" class="form-control" placeholder="Nome do fornecedor">
+                                                <input name="for_cnpj" onkeypress="mascaraCNPJ(this)" maxlength="18" type="text" id="CNPJ" class="form-control" placeholder="CNPJ">
+                                                <script>
+                                                    function mascaraCNPJ(input) {
+                                                        let value = input.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+                                                        if (value.length <= 14) {
+                                                            value = value.replace(/^(\d{2})(\d)/, '$1.$2'); // Adiciona ponto após os 2 primeiros dígitos
+                                                            value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3'); // Adiciona ponto após o bloco de 5 dígitos
+                                                            value = value.replace(/\.(\d{3})(\d)/, '.$1/$2'); // Adiciona barra após o bloco de 8 dígitos
+                                                            value = value.replace(/(\d{4})(\d)/, '$1-$2'); // Adiciona hífen após o bloco de 12 dígitos
+                                                        }
+                                                        input.value = value;
+                                                    }
+                                                </script>
+                                                <input name="for_celular" onkeypress="mascara(this, celular)" maxlength="15" type="text" id="celular" class="form-control" placeholder="Celular">
+                                                <script>
+                                                    // Aplica a função de máscara diretamente no evento 'input'
+                                                    document.getElementById("celular").addEventListener("input", function () {
+                                                        this.value = celular(this.value);  // Chama a função celular a cada input
+                                                    });
+
+                                                    // Função de máscara para celular
+                                                    function celular(v) {
+                                                        v = v.replace(/\D/g, ""); // Remove tudo que não é dígito
+                                                        v = v.replace(/^(\d{2})(\d)/g, "($1) $2"); // Parênteses nos dois primeiros dígitos
+                                                        v = v.replace(/(\d{5})(\d)/, "$1-$2"); // Hífen entre o quinto e sexto dígitos
+                                                        return v;
+                                                    }
+                                                </script>
+                                                <input name="for_email" type="text" id="email" class="form-control" placeholder="Email">
+                                            </div>
+                                        </div>
+                                        <div class="filter-form-group">
+                                            <input name="for_descricao" type="text" id="descricao" class="form-control" placeholder="Descrição">   
+                                        </div>
+                                        <div class="filter-form-buttons">
+                                            <button id="botaoS" type="submit" class="btn-filter btn-filter-primary">Filtrar</button>
+                                            <button id="botaoLimpar" type="submit" class="btn-filter btn-filter-secondary" onclick="limparPesquisa()">Limpar Filtro</button>
+                                        </div>
+                                        <script>
+                                            function limparPesquisa() {
+                                                document.querySelector("form[name='frm_consulta']").reset();  // Reseta os campos do formulário
+                                            }
+                                        </script>
+                                    </form>
+
                                     <table class="table table-responsive-sm">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
                                                 <th>Nome</th>
+                                                <th>CNPJ</th>
                                                 <th>Descrição</th>
                                                 <th>Email</th>
                                                 <th>Celular</th>
@@ -225,17 +299,37 @@ $sql = mysqli_query($con, $sql) or die ("Erro na sql!") ;
                                             <tr>
                                                 <th><?php echo $dados['for_codigo']; ?></th>
                                                 <td><?php echo $dados['for_nome']; ?></td>
+                                                <td><?php echo $dados['for_cnpj']; ?></td>
                                                 <td><?php echo $dados['for_descricao']; ?></td>
                                                 <td><?php echo $dados['for_email']; ?></td>
                                                 <td><?php echo $dados['for_celular']; ?></td>
                                                 <td>
                                                     <span>
-                                                        <a href="form_atualizar_fornecedor.php?for_codigo=<?php echo $dados['for_codigo']; ?>" class="mr-4" data-toggle="tooltip" data-placement="top" title="Edit">
-                                                            <i class="fa fa-pencil color-muted"></i> 
+                                                        <a href="form_atualizar_fornecedor.php?for_codigo=<?php echo $dados['for_codigo']; ?>" class="mr-4" data-toggle="tooltip" data-placement="top" title="Editar">
+                                                            <i class="fa fa-pencil fa-lg color-warning"></i> 
                                                         </a>
-                                                        <a href="deletar/delete_fornecedor.php?for_codigo=<?php echo $dados['for_codigo']; ?>" data-toggle="tooltip" data-placement="top" title="Close">
-                                                            <i class="fa fa-close color-danger"></i>
+                                                        <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $dados['for_codigo']; ?>)" data-toggle="tooltip" data-placement="top" title="Deletar">
+                                                            <i class="fa fa-close fa-lg color-danger"></i>
                                                         </a>
+                                                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                                        <script>
+                                                            function confirmDelete(for_codigo) {
+                                                                Swal.fire({
+                                                                    title: 'Você tem certeza?',
+                                                                    text: "Essa ação não poderá ser desfeita!",
+                                                                    icon: 'warning',
+                                                                    showCancelButton: true,
+                                                                    confirmButtonColor: '#3085d6',
+                                                                    cancelButtonColor: '#d33',
+                                                                    confirmButtonText: 'Sim, deletar!',
+                                                                    cancelButtonText: 'Cancelar'
+                                                                }).then((result) => {
+                                                                    if (result.isConfirmed) {
+                                                                        window.location.href = 'deletar/delete_fornecedor.php?for_codigo=' + for_codigo;
+                                                                    }
+                                                                });
+                                                            }
+                                                        </script>
                                                     </span>
                                                 </td>
                                             </tr>
@@ -259,7 +353,7 @@ $sql = mysqli_query($con, $sql) or die ("Erro na sql!") ;
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Quixkit</a> 2019</p>
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Neo Enigma</a> 2024</p>
             </div>
         </div>
         <!--**********************************
@@ -287,9 +381,9 @@ $sql = mysqli_query($con, $sql) or die ("Erro na sql!") ;
     <script src="./vendor/global/global.min.js"></script>
     <script src="./js/quixnav-init.js"></script>
     <script src="./js/custom.min.js"></script>
-    
-
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/imask"></script>
+    <script src="js/mask.js"></script>
 
 </body>
 

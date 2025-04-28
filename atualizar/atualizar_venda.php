@@ -3,25 +3,25 @@ require_once("../conexao/banco.php");
 
 $id 	= $_REQUEST['txt_codigo'];
 	
+$credito 		= $_REQUEST['txt_credito'];
+$tipo 	= $_REQUEST['txt_tipo_venda'];
 $cliente 		= $_REQUEST['txt_cliente'];
-$item 	= $_REQUEST['txt_item'];
-$tipo 	= $_REQUEST['txt_tipo'];
-$nome 		= $_REQUEST['txt_nome'];
-$obs 	= $_REQUEST['txt_obs'];
-$data 		= $_REQUEST['txt_data'];
+$data_venda 	= $_REQUEST['txt_data_lanc'];
+$data_entrega 		= $_REQUEST['txt_data_ent'];
+$status 		= $_REQUEST['txt_status'];
 
 $sql = "update tb_vendas set 
-					CLI_CODIGO = '$cliente', 
-					ITE_CODIGO = '$item', 
-					VEN_FORMA_PAG = '$tipo',
-					VEN_NOME = '$nome',
-					VEN_OBSERVACAO = '$obs',
-					VEN_DATA_VENDA = '$data'
+					cre_codigo = '$credito', 
+					ven_tipo_venda = '$tipo', 
+					cli_codigo = '$cliente',
+					ven_data_lancamento = '$data_venda',
+					ven_data_entrega = '$data_entrega',
+					ven_status_entrega = '$status'
 				where 
-					PRO_CODIGO = '$id'";
+					ven_codigo = '$id'";
 								
 mysqli_query($con, $sql) or die ("Erro na sql!") ;
 
-header("Location: ../html/consulta_produto.php");
+header("Location: ../form_atualizar_itens_venda.php?venda=$id");
 
 ?>

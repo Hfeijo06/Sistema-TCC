@@ -1,60 +1,103 @@
 <?PHP
-
+session_start(); // Inicia a sessão
 require_once('conexao/banco.php');
 
 $venda = isset($_REQUEST['venda']) ? $_REQUEST['venda'] : '0';
 
-$sql = "select * from tb_clientes";
+$sql = "SELECT *
+        FROM tb_clientes 
+        WHERE cli_codigo != 1";
 $sql = mysqli_query($con, $sql) or die ("Erro na sql!") ;
 
-$sql2 = "select * from tb_produtos";
+$sql2 = "SELECT p.*, e.est_qtde
+         FROM tb_produtos AS p 
+         INNER JOIN tb_estoque AS e ON p.pro_codigo = e.pro_codigo
+         WHERE e.est_qtde > 0";  
 $sql2 = mysqli_query($con, $sql2) or die ("Erro na sql2!");
     
 $sql3 = "select * 
 			from tb_itens_venda as i
 			inner join tb_produtos as p on (i.pro_codigo = p.pro_codigo)
-		where i.ven_codigo = '$venda'";
+		    where i.ven_codigo = '$venda'";
 $sql3 = mysqli_query($con, $sql3) or die ("Erro na sql3!");
 
-$sql4 = "select v.ven_codigo, v.ven_data, v.ven_tipo_pagamento, c.cli_nome, c.cli_codigo
+$sql4 = "select *
           from tb_vendas as v
 		  inner join tb_clientes as c on (v.cli_codigo = c.cli_codigo)
+          inner join tb_credito as cr on (v.cre_codigo = cr.cre_codigo)
 		  where v.ven_codigo = '$venda'";
 $sql4 = mysqli_query($con, $sql4) or die ("Erro na sql4!");
 $dados4 = mysqli_fetch_array($sql4);
+
+$sql5 = "SELECT *
+         FROM tb_credito
+        ";
+$sql5 = mysqli_query($con, $sql5) or die ("Erro na sql!") ;
+
+$sql6 = "SELECT *
+         FROM tb_credito
+        ";
+$sql6 = mysqli_query($con, $sql6) or die ("Erro na sql!") ;
 
 ?>
 
 
 <script type="text/javascript">
-
 function valorUnitario() {
-	
-	var preco;
-	
-		preco = document.frm_itens_venda.txt_produto.options[txt_produto.selectedIndex].getAttribute('data-preco');
-		document.frm_itens_venda.txt_preco.value = preco;
+    var preco;
+    var estoque;
+
+    preco = document.frm_itens_venda.txt_produto.options[txt_produto.selectedIndex].getAttribute('data-preco');
+    estoque = document.frm_itens_venda.txt_produto.options[txt_produto.selectedIndex].getAttribute('data-estoque');
+    
+    document.frm_itens_venda.txt_preco.value = preco;
+    document.frm_itens_venda.txt_qtde.max = estoque; // Define o máximo de quantidade com base no estoque
+
+    // Atualiza a quantidade disponível de estoque no elemento correspondente
+    document.getElementById('quantidade-estoque').textContent = estoque;
 }
 
-function calculo(){
+function calculo() {
+    var qtde = document.frm_itens_venda.txt_qtde.value;
+    var valor = document.frm_itens_venda.txt_preco.value.replace(",", ".");
+    var estoque = document.frm_itens_venda.txt_produto.options[txt_produto.selectedIndex].getAttribute('data-estoque');
 
-var qtde;
-var valor;
-var total;
+    if (parseInt(qtde) > parseInt(estoque)) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Quantidade indisponível!',
+            text: 'A quantidade selecionada excede o estoque disponível! Quantidade máxima foi ajustada.',
+            confirmButtonText: 'OK'
+        });
+        document.frm_itens_venda.txt_qtde.value = estoque; // Ajusta a quantidade ao máximo disponível
+        qtde = estoque;
+    }
 
-qtde 	= document.frm_itens_venda.txt_qtde.value;
-valor 	= document.frm_itens_venda.txt_preco.value.replace(",",".");
+    var total = parseFloat(qtde) * parseFloat(valor);
 
-total 	= parseFloat(qtde) * parseFloat(valor);
-
-	if (total > 0) {
-		document.frm_itens_venda.txt_total.value = parseFloat(total);
-	}
-
+    if (total > 0) {
+        document.frm_itens_venda.txt_total.value = parseFloat(total);
+    }
 }
 
+function validarFormulario() {
+    var qtde = document.frm_itens_venda.txt_qtde.value;
+    var estoque = document.frm_itens_venda.txt_produto.options[txt_produto.selectedIndex].getAttribute('data-estoque');
+
+    if (parseInt(qtde) > parseInt(estoque)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Erro!',
+            text: 'Não é possível vender uma quantidade maior do que a disponível no estoque!',
+            confirmButtonText: 'OK'
+        });
+        return false; // Impede o envio do formulário
+    }
+    return true; // Permite o envio do formulário
+}
 
 </script>
+
 
 
 
@@ -65,15 +108,215 @@ total 	= parseFloat(qtde) * parseFloat(valor);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Focus - Bootstrap Admin Dashboard </title>
+    <title>Sistema - Neo Enigma </title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/logocima.png">
     <!-- Custom Stylesheet -->
+    <link href="./css/table.css" rel="stylesheet">
+    <link href="./css/icon.css" rel="stylesheet">
     <link href="./css/style.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <!-- Adicione a biblioteca do Toastr -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Biblioteca Toastr -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+    .button-container {
+        display: flex;
+        gap: 10px; /* Ajuste o valor conforme necessário */
+        margin-left: 15px;
+    }
+    .btn-secondary {
+        background-color: #4CAF50; /* Verde claro */
+        border: none;
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background-color: #45a049; /* Verde escuro para efeito hover */
+    }
+    .btn-cancel {
+        background-color: red; 
+        border: none;
+        color: white;
+    }
+
+    .btn-cancel:hover {
+        background-color: #c70000;
+        color: white; 
+    }
+
+    .button-container {
+        display: flex;
+        gap: 10px; /* Ajuste o valor conforme necessário */
+        margin-left: 15px;
+    }
+    .btn-cancel {
+        background-color: red; /* Verde claro */
+        border: none;
+        color: white;
+    }
+
+    .btn-cancel:hover {
+        background-color: #c70000;
+        color: white; /* Verde escuro para efeito hover */
+    }
+
+    /* Estilo para o botão "Adicionar Despesa" */
+    .btn-adicionar-despesa {
+        white-space: nowrap;
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: #fff;
+        transition: all 0.3s ease;
+    }
+
+    .btn-adicionar-despesa:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    /* Estilo para o foco do botão */
+    .btn-adicionar-despesa:focus,
+    .btn-adicionar-despesa.focus {
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    /* Estilo para quando o botão está sendo clicado (estado ativo) */
+    .btn-adicionar-despesa:active,
+    .btn-adicionar-despesa.active {
+        background-color: #545b62 !important;
+        border-color: #4e555b !important;
+        box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5) !important;
+    }
+
+    /* Remover outline padrão do navegador */
+    .btn-adicionar-despesa::-moz-focus-inner {
+        border: 0;
+    }
+
+    /* Estilos para o modal */
+    .modal-despesa .modal-content {
+        border-radius: 0.3rem;
+    }
+
+    .modal-despesa .modal-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .modal-despesa .modal-title {
+        color: #495057;
+    }
+
+    .modal-despesa .modal-body {
+        padding: 20px;
+    }
+
+    .modal-despesa .modal-footer {
+        background-color: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .modal-despesa .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .modal-despesa .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    /* Estilo para garantir que o select e o botão tenham a mesma altura */
+    .form-group .d-flex {
+        align-items: stretch;
+    }
+
+    .form-group .d-flex select,
+    .form-group .d-flex .btn-adicionar-despesa {
+        height: 38px; /* Ajuste conforme necessário */
+    }
+
+    /* Estilos para os botões do modal */
+    .modal-despesa .btn-modal {
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 0.25rem;
+        transition: all 0.15s ease-in-out;
+    }
+
+    .modal-despesa .btn-modal-cancel {
+        color: #fff;
+        background-color: red;
+        border-color: red;
+    }
+
+    .modal-despesa .btn-modal-cancel:hover {
+        color: #fff;
+        background-color: #c70000;
+        border-color: #c70000;
+    }
+
+    /* Estilos para o foco dos botões do modal */
+    .modal-despesa .btn-modal:focus,
+    .modal-despesa .btn-modal.focus {
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);
+    }
+
+    .modal-despesa .btn-modal-save:focus,
+    .modal-despesa .btn-modal-save.focus {
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+    }
+
+    /* Estilos para quando os botões do modal estão sendo clicados (estado ativo) */
+    .modal-despesa .btn-modal:active,
+    .modal-despesa .btn-modal.active {
+        transform: translateY(1px);
+    }
+
+    .modal-despesa .btn-modal-cancel:active,
+    .modal-despesa .btn-modal-cancel.active {
+        background-color: #545b62 !important;
+        border-color: #4e555b !important;
+    }
+
+    /* Remover outline padrão do navegador */
+    .modal-despesa .btn-modal::-moz-focus-inner {
+        border: 0;
+    }
+    </style>
 
 </head>
 
 <body>
+<?php
+    if (isset($_SESSION['success_message'])) {
+        // Exibe a notificação com a mensagem da sessão
+        echo "<script>
+            $(document).ready(function () {
+                toastr.success('" . $_SESSION['success_message'] . "', 'Sucesso', {
+                    positionClass: 'toast-top-right',
+                    timeOut: 5000,
+                    closeButton: true,
+                    progressBar: true
+                });
+            });
+        </script>";
+        // Limpa a mensagem da sessão após exibi-la
+        unset($_SESSION['success_message']);
+    }
+    ?>
 
     <!--*******************
         Preloader start
@@ -123,95 +366,18 @@ total 	= parseFloat(qtde) * parseFloat(valor);
                 <nav class="navbar navbar-expand">
                     <div class="collapse navbar-collapse justify-content-between">
                         <div class="header-left">
-                            <div class="search_bar dropdown">
-                                <span class="search_icon p-3 c-pointer" data-toggle="dropdown">
-                                    <i class="mdi mdi-magnify"></i>
-                                </span>
-                                <div class="dropdown-menu p-0 m-0">
-                                    <form>
-                                        <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                                    </form>
-                                </div>
-                            </div>
                         </div>
 
                         <ul class="navbar-nav header-right">
-                            <li class="nav-item dropdown notification_dropdown">
-                                <a class="nav-link" href="#" role="button" data-toggle="dropdown">
-                                    <i class="mdi mdi-bell"></i>
-                                    <div class="pulse-css"></div>
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <ul class="list-unstyled">
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-user"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Martin</strong> has added a <strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-shopping-cart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Jennifer</strong> purchased Light Dashboard 2.0.</p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="danger"><i class="ti-bookmark"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>Robin</strong> marked a <strong>ticket</strong> as unsolved.
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="primary"><i class="ti-heart"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong>David</strong> purchased Light Dashboard 1.0.</p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                        <li class="media dropdown-item">
-                                            <span class="success"><i class="ti-image"></i></span>
-                                            <div class="media-body">
-                                                <a href="#">
-                                                    <p><strong> James.</strong> has added a<strong>customer</strong> Successfully
-                                                    </p>
-                                                </a>
-                                            </div>
-                                            <span class="notify-time">3:20 am</span>
-                                        </li>
-                                    </ul>
-                                    <a class="all-notification" href="#">See all notifications <i
-                                            class="ti-arrow-right"></i></a>
-                                </div>
-                            </li>
+                            
                             <li class="nav-item dropdown header-profile">
                                 <a class="nav-link" href="#" role="button" data-toggle="dropdown">
                                     <i class="mdi mdi-account"></i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a href="./app-profile.html" class="dropdown-item">
-                                        <i class="icon-user"></i>
-                                        <span class="ml-2">Profile </span>
-                                    </a>
-                                    <a href="./email-inbox.html" class="dropdown-item">
-                                        <i class="icon-envelope-open"></i>
-                                        <span class="ml-2">Inbox </span>
-                                    </a>
-                                    <a href="./page-login.html" class="dropdown-item">
+                                    <a href="logout.php" class="dropdown-item">
                                         <i class="icon-key"></i>
-                                        <span class="ml-2">Logout </span>
+                                        <span class="ml-2">Sair</span>
                                     </a>
                                 </div>
                             </li>
@@ -238,16 +404,10 @@ total 	= parseFloat(qtde) * parseFloat(valor);
         <div class="content-body">
             <div class="container-fluid">
                 <div class="row page-titles mx-0">
-                    <div class="col-sm-6 p-md-0">
-                        <div class="welcome-text">
-                            <h4>Hi, welcome back!</h4>
-                            <span class="ml-1">Element</span>
-                        </div>
-                    </div>
-                    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                    <div class="col-sm-12 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="javascript:void(0)">Form</a></li>
-                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Element</a></li>
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Vendas</a></li>
+                            <li class="breadcrumb-item active"><a href="javascript:void(0)">Formulário de Vendas</a></li>
                         </ol>
                     </div>
                 </div>
@@ -262,74 +422,354 @@ total 	= parseFloat(qtde) * parseFloat(valor);
                             <div class="card-body">
                                 <div class="basic-form">
 
-                                <?PHP if($venda == 0) { ?>
-                                    <form name="frm_venda" method="post" action="cadastro/cadastro_venda.php">
+                                <?php if($venda == 0) { ?>
+                                    <form name="frm_venda" method="post" action="cadastro/cadastro_venda.php" onsubmit="return validarFormulario()">
 
                                         <div class="col-lg-12 mb-4">
                                             <div class="form-group">
-                                                <label>Cliente</label>
-                                                <select class="form-control" name="txt_cliente" id="txt_cliente" required>
-                                                    <option checked>Escolha Uma Opção</option>
-                                                        <?php while ($dados = mysqli_fetch_array($sql)) { ?>
-                                                    <option value="<?php echo $dados['cli_codigo']; ?>"> <?php echo $dados['cli_nome']; ?></option>
+                                                <label>Tipo de Crédito</label>
+                                                <div class="d-flex">
+                                                    <select class="form-control flex-grow-1" name="txt_credito" id="txt_credito">
+                                                        <option value="" selected disabled>Escolha Uma Opção</option>
+                                                        <?php while ($dados5 = mysqli_fetch_array($sql5)) { ?>
+                                                            <option value="<?php echo $dados5['cre_codigo']; ?>"><?php echo $dados5['cre_nome']; ?></option>
                                                         <?php } ?>
-                                                </select>
+                                                    </select>
+                                                    <button type="button" class="btn btn-secondary btn-adicionar-despesa ml-2" data-toggle="modal" data-target="#modalCadastrarDespesa">Adicionar Despesa</button>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-12 mb-4">
-                                            <div class="form-group">
-                                                <label class="text-label">Data da Venda*</label>
-                                                <input type="date" name="txt_data" id="txt_data" class="form-control" placeholder="Digite a Data da Venda" required>
-                                            </div>
+                                    <!-- Seleção do Tipo de Venda -->
+                                    <div class="col-lg-12 mb-4">
+                                        <div class="form-group">
+                                            <label>Tipo de Venda</label>
+                                            <select class="form-control" name="txt_tipo_venda" id="txt_tipo_venda" onchange="toggleEntrega()">
+                                                <option value="" checked>Escolha Uma Opção</option>
+                                                <option value="Presencial">Presencial</option>
+                                                <option value="Entrega">Entrega</option>
+                                            </select>
                                         </div>
-                                        <div class="col-lg-12 mb-4">
-                                            <div class="form-group">
-                                                <label>Tipo do Pagamento</label>
-                                                <select class="form-control" name="txt_tipo_pag" id="txt_tipo_pag" required>
-                                                    <option checked>Escolha Uma Opção</option>
-                                                    <option value="1">Dinheiro</option>
-                                                    <option value="2">Cartão</option>
-                                                    <option value="3">Crédiario</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12 mb-4">
-                                            <button type="submit" id="btn_salvar" class="btn btn-primary">Cadastrar</button>
-                                        </div>
+                                    </div>
 
-                                    </form>
+                                    <!-- Seleção do Cliente -->
+                                    <div class="col-lg-12 mb-4">
+                                        <div class="form-group">
+                                            <label>Cliente</label>
+                                            <select class="form-control" name="txt_cliente" id="txt_cliente">
+                                                <option value="" checked>Escolha Uma Opção</option>
+                                                <?php while ($dados = mysqli_fetch_array($sql)) { ?>
+                                                    <option value="<?php echo $dados['cli_codigo']; ?>"><?php echo $dados['cli_nome']; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Data da Venda -->
+                                    <div class="col-lg-12 mb-4">
+                                        <div class="form-group">
+                                            <label class="text-label">Data da Venda</label>
+                                            <input type="date" name="txt_data_lanc" id="txt_data" class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <!-- Data de Entrega -->
+                                    <div class="col-lg-12 mb-4" id="entrega_section" style="display: none;">
+                                        <div class="form-group">
+                                            <label class="text-label" for="data_entrega">Data e Hora de Entrega</label>
+                                            <input type="datetime-local" class="form-control" id="data_entrega" name="txt_data_ent">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Status da Entrega</label>
+                                            <select class="form-control" name="txt_status">
+                                                <option checked value="">Escolha Uma Opção</option>
+                                                <option value="Pendente">Pendente</option>
+                                                <option value="transito">Em Trânsito</option>
+                                                <option value="Entregue">Entregue</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="button-container">
+                                        <button type="button" id="btn_cancelar" class="btn btn-cancel">Cancelar</button>
+                                        <button type="submit" id="btn_salvar1" class="btn btn-primary">Cadastrar</button>
+                                    </div>
+
+                                    <script>
+                                        document.getElementById("btn_cancelar").addEventListener("click", function() {
+                                            // Redireciona para um script PHP que configura a sessão
+                                            window.location.href = "set_session.php"; // Substitua com a URL do seu script PHP
+                                            document.forms["frm_venda"].reset();
+                                        });
+                                    </script>
+                                                    
+                                </form>
+                                <!-- Modal para Cadastrar Despesa (Fora do Formulário) -->
+                                <div class="modal fade modal-despesa" id="modalCadastrarDespesa" tabindex="-1" role="dialog" aria-labelledby="modalCadastrarDespesaLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modalCadastrarDespesaLabel">Cadastrar Novo Crédito</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="formCadastrarDespesa">
+                                                        <div class="form-group">
+                                                            <label for="nome_despesa">Nome do Crédito</label>
+                                                            <input type="text" class="form-control" id="nome_credito" name="nome_credito" placeholder="Digite o nome da despesa" required>
+                                                        </div>
+                                                    </form>
+                                                    <table class="table table-responsive-sm">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>Nome</th>
+                                                                <th>Ações</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <?php while ($dados6 = mysqli_fetch_array($sql6)) { ?>
+                                                            <tr>
+                                                                <th><?php echo $dados6['cre_codigo']; ?></th>
+                                                                <td><?php echo $dados6['cre_nome']; ?></td>
+                                                                <td>
+                                                                    <span>
+                                                                        <a href="javascript:void(0);" onclick="confirmDelete(<?php echo $dados6['cre_codigo']; ?>)" data-toggle="tooltip" data-placement="top" title="Deletar">
+                                                                            <i class="fa fa-close fa-lg color-danger"></i>
+                                                                        </a>
+                                                                        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                                                                        <script>
+                                                                            function confirmDelete(cre_codigo) {
+                                                                                Swal.fire({
+                                                                                    title: 'Você tem certeza?',
+                                                                                    text: "Essa ação não poderá ser desfeita!",
+                                                                                    icon: 'warning',
+                                                                                    showCancelButton: true,
+                                                                                    confirmButtonColor: '#3085d6',
+                                                                                    cancelButtonColor: '#d33',
+                                                                                    confirmButtonText: 'Sim, deletar!',
+                                                                                    cancelButtonText: 'Cancelar'
+                                                                                }).then((result) => {
+                                                                                    if (result.isConfirmed) {
+                                                                                        window.location.href = 'deletar/delete_credito.php?cre_codigo=' + cre_codigo;
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        </script>
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        <?php } ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-modal btn-modal-cancel" data-dismiss="modal">Cancelar</button>
+                                                    <button type="button" class="btn btn-modal btn-primary" id="btnCadastrarDespesa">Salvar</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                    <script>
+                                        
+                                        $(document).ready(function() {
+                                            $('#btnCadastrarDespesa').click(function(e) {
+                                                e.preventDefault(); // Impede o envio do formulário principal
+
+                                                var nomecredito = $('#nome_credito').val();
+
+                                                if (nomecredito.trim() === "") {
+                                                    Swal.fire('Erro', 'Por favor, digite o nome do crédito.', 'error');
+                                                    return;
+                                                }
+
+                                                $.ajax({
+                                                    url: 'cadastrar_credito.php',
+                                                    type: 'POST',
+                                                    data: { nome_credito: nomecredito },
+                                                    success: function(response) {
+                                                        if (response.trim() === 'success') {
+                                                            Swal.fire('Sucesso', 'Crédito cadastrado com sucesso!', 'success').then(function() {
+                                                                $('#modalCadastrarDespesa').modal('hide');
+                                                                $('#nome_credito').val('');
+                                                                location.reload();
+                                                            });
+                                                        } else {
+                                                            Swal.fire('Erro', 'Não foi possível cadastrar a despesa: ' + response, 'error');
+                                                        }
+                                                    },
+                                                    error: function() {
+                                                        Swal.fire('Erro', 'Ocorreu um erro na requisição.', 'error');
+                                                    }
+                                                });
+                                            });
+                                        });
+
+                                    </script>
+                                    <script>
+                                        function validarFormulario() {
+                                                let isValid = true;
+
+                                                // Função para destacar campos vazios
+                                                function destacarCampo(campo) {
+                                                    campo.style.borderColor = "red";
+                                                    campo.focus();
+                                                    isValid = false;
+                                                }
+
+                                                // Função para remover o destaque
+                                                function removerDestaque(campo) {
+                                                    campo.style.borderColor = "";
+                                                }
+
+                                                // Campos obrigatórios
+                                                const credito = document.getElementById('txt_credito');
+                                                const tipoVenda = document.getElementById('txt_tipo_venda');
+                                                const cliente = document.getElementById('txt_cliente');
+                                                const dataVenda = document.getElementById('txt_data');
+                                                const statusEntrega = document.getElementsByName('txt_status')[0]; // Caso a entrega esteja visível
+
+                                                // Verificando se os campos estão preenchidos
+                                                if (credito.value === "") {
+                                                    destacarCampo(credito);
+                                                } else {
+                                                    removerDestaque(credito);
+                                                }
+
+                                                if (tipoVenda.value === "") {
+                                                    destacarCampo(tipoVenda);
+                                                } else {
+                                                    removerDestaque(tipoVenda);
+                                                }
+
+                                                if (cliente.value === "") {
+                                                    destacarCampo(cliente);
+                                                } else {
+                                                    removerDestaque(cliente);
+                                                }
+
+                                                if (dataVenda.value === "") {
+                                                    destacarCampo(dataVenda);
+                                                } else {
+                                                    removerDestaque(dataVenda);
+                                                }
+
+                                                // Verificando se a entrega foi selecionada e os campos correspondentes
+                                                if (tipoVenda.value === "Entrega") {
+                                                    const dataEntrega = document.getElementById('data_entrega');
+                                                    if (dataEntrega.value === "") {
+                                                        destacarCampo(dataEntrega);
+                                                    } else {
+                                                        removerDestaque(dataEntrega);
+                                                    }
+
+                                                    if (statusEntrega.value === "") {
+                                                        destacarCampo(statusEntrega);
+                                                    } else {
+                                                        removerDestaque(statusEntrega);
+                                                    }
+                                                }
+
+                                                return isValid;  // Impede o envio se algum campo obrigatório estiver vazio
+                                            }
+
+                                            function toggleEntrega() {
+                                                var tipoVenda = document.getElementById("txt_tipo_venda").value;
+                                                var entregaSection = document.getElementById("entrega_section");
+
+                                                if (tipoVenda === "Entrega") {
+                                                    entregaSection.style.display = "block";
+                                                } else {
+                                                    entregaSection.style.display = "none";
+                                                }
+                                            }
+                                    </script>
+
+                                </div>
 
                                 <?PHP } else {  ?>
 
-                                    <form name="frm_venda" method="post" action="cadastro/cadastro_venda.php">
                                         <div class="col-lg-12 mb-4">
+                                            <div class="form-group">
+                                                <label>Tipo do Crédito</label>
+                                                <select class="form-control" name="txt_credito" id="txt_credito" disabled>
+                                                    <option value="<?php echo $dados4['cre_codigo']; ?>"> <?php echo $dados4['cre_nome']; ?> </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    <div class="col-lg-12 mb-4">
+                                        <div class="form-group">
+                                            <label>Tipo de Venda</label>
+                                            <select class="form-control" name="txt_tipo_venda" id="txt_tipo_venda" required disabled>
+                                                <option value="Presencial" <?php echo ($dados4['ven_tipo_venda'] == 'Presencial') ? 'selected' : ''; ?>>Presencial</option>
+                                                <option value="Entrega" <?php echo ($dados4['ven_tipo_venda'] == 'Entrega') ? 'selected' : ''; ?>>Entrega</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Seleção do Cliente -->
+                                    <div class="col-lg-12 mb-4">
                                             <div class="form-group">
                                                 <label>Cliente</label>
                                                 <select class="form-control" name="txt_cliente" id="txt_cliente" disabled>
                                                     <option value="<?php echo $dados4['cli_codigo']; ?>"> <?php echo $dados4['cli_nome']; ?> </option>
                                                 </select>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-12 mb-4">
+                                    </div>
+
+                                    <!-- Data da Venda -->
+                                    <div class="col-lg-12 mb-4">
                                             <div class="form-group">
-                                                <label class="text-label">Data da Venda*</label>
-                                                <input type="date" name="txt_data" id="txt_data" class="form-control" value="<?php echo $dados4['ven_data']; ?>" disabled>
+                                                <label class="text-label">Data da Venda</label>
+                                                <input type="date" name="txt_data_lanc" id="txt_data" class="form-control" value="<?php echo $dados4['ven_data_lancamento']; ?>" readonly>
                                             </div>
+                                    </div>
+
+                                    <!-- Data de Entrega -->
+                                    <div class="col-lg-12 mb-4" id="entrega_section" style="display: none;">
+                                        <div class="form-group">
+                                            <label class="text-label">Data da Entrega</label>
+                                            <input type="datetime-local" name="txt_data_ent" id="txt_data" class="form-control" value="<?php echo $dados4['ven_data_entrega']; ?>" readonly>
                                         </div>
-                                        <div class="col-lg-12 mb-4">
-                                            <div class="form-group">
-                                                <label>Tipo do Pagamento</label>
-                                                <select class="form-control" name="txt_tipo_pag" id="txt_tipo_pag" disabled>
-                                                    <option checked>Escolha Uma Opção</option>
-                                                    <option <?php if ($dados4['ven_tipo_pagamento'] == "1") { echo "selected";} ?> > Dinheiro </option>
-                                                    <option <?php if ($dados4['ven_tipo_pagamento'] == "2") { echo "selected";} ?> > Cartão </option>
-                                                    <option <?php if ($dados4['ven_tipo_pagamento'] == "3") { echo "selected";} ?> > Crediário </option>
-                                                </select>
-                                            </div>
+                                        <div class="form-group">
+                                            <label>Status da Entrega</label>
+                                            <select class="form-control" name="txt_status" id="txt_status" required disabled>
+                                                <option value="Pendente" 
+                                                    <?php echo ($dados4['ven_status_entrega'] == 'Pendente') ? 'selected' : ''; ?>>
+                                                    Pendente
+                                                </option>
+                                                <option value="transito" 
+                                                    <?php echo ($dados4['ven_status_entrega'] == 'transito') ? 'selected' : ''; ?>>
+                                                    Em Trânsito
+                                                </option>
+                                                <option value="Entregue" 
+                                                    <?php echo ($dados4['ven_status_entrega'] == 'Entregue') ? 'selected' : ''; ?>>
+                                                    Entregue
+                                                </option>
+                                            </select>
                                         </div>
-                                    </form>
+                                    </div>
+                                    <script>
+                                        window.onload = function() {
+                                            carregaPagina();
+                                        };
+
+                                        function carregaPagina() {
+                                            var tipoVenda = document.getElementById("txt_tipo_venda").value;
+                                            var entregaSection = document.getElementById("entrega_section");
+
+                                            if (tipoVenda === "Entrega") {
+                                                entregaSection.style.display = "block";
+                                            } else {
+                                                entregaSection.style.display = "none";
+                                            }
+                                        }
+                                    </script>
+                                        
                                     
-                                    <form name="frm_itens_venda" method="post" action="cadastro/cadastro_itens_venda.php">
+                                    <form name="frm_itens_venda" method="post" action="cadastro/cadastro_itens_venda.php" onsubmit="return validarFormulario2();">
 
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label"></label>
@@ -344,9 +784,10 @@ total 	= parseFloat(qtde) * parseFloat(valor);
                                                 <select name="txt_produto" id="txt_produto" class="form-control" onclick="valorUnitario()">
                                                 <option selected>Escolha Uma Opção</option>
                                                     <?php while ($dados2 = mysqli_fetch_array($sql2)) { ?>
-                                                        <option value="<?php echo $dados2['pro_codigo'] ; ?>" data-preco="<?php echo $dados2['pro_preco'] ; ?>"> <?php echo $dados2['pro_descricao']; ?> </option>
+                                                        <option value="<?php echo $dados2['pro_codigo'] ; ?>" data-preco="<?php echo $dados2['pro_preco'] ; ?>" data-estoque="<?php echo $dados2['est_qtde']; ?>"> <?php echo $dados2['pro_descricao']; ?> </option>
                                                     <?php } ?>
                                                 </select>
+                                                <small id="estoque-disponivel" class="form-text text-muted mt-2">Quantidade disponível: <span id="quantidade-estoque">-</span></small>
                                         </div>
                                         
                                         <div class="col-lg-12 mb-4">
@@ -359,7 +800,7 @@ total 	= parseFloat(qtde) * parseFloat(valor);
                                         <div class="col-lg-12 mb-4">
                                             <div class="form-group row">
                                                 <label>Qtde</label>
-                                                <input type="number" class="form-control" name="txt_qtde" id="txt_qtde" placeholder="Digite a Quantidade do Produto" onblur="calculo()">
+                                                <input type="number" class="form-control" name="txt_qtde" id="txt_qtde" placeholder="Digite a Quantidade do Produto" oninput="calculo()">
                                             </div>
                                         </div>
 
@@ -370,17 +811,81 @@ total 	= parseFloat(qtde) * parseFloat(valor);
                                             </div>
                                         </div>
 
-                                        <div class="col-lg-12 mb-4">
-                                            <button type="submit" id="btn_salvar" class="btn btn-primary">Cadastrar</button>
+                                        <div class="button-container" style="margin-left: 0px;">
+                                            <button type="submit" id="btn_salvar1" class="btn btn-primary">Cadastrar</button>
+                                            <button type="button" id="btn_salvar2" class="btn btn-secondary">Pagamento</button>
                                         </div>
 
                                     </form>
+                                    
+                                    <script type="text/javascript">
+                                        function validarFormulario2() {
+                                            let isValid = true;
+
+                                            // Função para destacar campos vazios
+                                            function destacarCampo(campo) {
+                                                campo.style.borderColor = "red";
+                                                campo.focus();
+                                                isValid = false;
+                                            }
+
+                                            // Função para remover o destaque
+                                            function removerDestaque(campo) {
+                                                campo.style.borderColor = "";
+                                            }
+
+                                            // Campos obrigatórios
+                                            const produto = document.getElementById("txt_produto");
+                                            const preco = document.getElementById("txt_preco");
+                                            const quantidade = document.getElementById("txt_qtde");
+
+                                            // Verificando se os campos estão preenchidos
+                                            if (produto.value === "Escolha Uma Opção") {
+                                                destacarCampo(produto);
+                                            } else {
+                                                removerDestaque(produto);
+                                            }
+
+                                            if (preco.value === "" || preco <= 0) {
+                                                destacarCampo(preco);
+                                            } else {
+                                                removerDestaque(preco);
+                                            }
+
+                                            if (quantidade.value === "" || quantidade <= 0) {
+                                                destacarCampo(quantidade);
+                                            } else {
+                                                removerDestaque(quantidade);
+                                            }
+
+                                            return isValid; // Impede o envio se algum campo obrigatório estiver vazio
+                                        }
+
+
+                                        document.getElementById('btn_salvar2').addEventListener('click', function(event) {
+                                            event.preventDefault(); // Impede o comportamento padrão de envio do formulário
+
+                                            var vendaId = document.getElementById('txt_venda').value; // Obtém o ID da venda
+
+                                            // Redireciona para a página de cadastro de pagamento, incluindo o ID da venda na URL
+                                            window.location.href = 'form_cadastro_pagamento.php?venda_id=' + vendaId;
+                                        });
+
+                                        document.getElementById("btn_cancelar").addEventListener("click", function() {
+                                            // Redireciona para um script PHP que configura a sessão
+                                            window.location.href = "set_session.php"; // Substitua com a URL do seu script PHP
+                                            document.forms["frm_itens_venda"].reset();
+                                        });
+
+                                    </script>
+
+                                    
                                 </div>
                             </div>
 
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-responsive-sm">
+                                    <table class="table table-responsive-sm" id="itens-venda-tabela">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
@@ -402,11 +907,11 @@ total 	= parseFloat(qtde) * parseFloat(valor);
                                                 <td>
                                                     <span>
                                                         <a href="deletar/delete_itens_venda.php?itv_codigo=<?php echo $dados3['itv_codigo']; ?>&&ven_codigo=<?php echo $dados3['ven_codigo']; ?>" data-toggle="tooltip" data-placement="top" title="Close">
-                                                            <i class="fa fa-close color-danger"></i>
+                                                            <i class="fa fa-close fa-lg color-danger"></i>
                                                         </a>
                                                     </span>
                                                 </td>
-                                            </tr>
+                                            </tr>   
                                         <?php } ?>
                                         </tbody>
                                     </table>
@@ -430,7 +935,7 @@ total 	= parseFloat(qtde) * parseFloat(valor);
         ***********************************-->
         <div class="footer">
             <div class="copyright">
-                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Quixkit</a> 2019</p>
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Neo Enigma</a> 2024</p>
             </div>
         </div>
         <!--**********************************

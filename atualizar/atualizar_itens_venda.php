@@ -1,25 +1,26 @@
 ﻿<?PHP
+session_start();
 require_once("../conexao/banco.php");
+	
+$venda 	= $_REQUEST['txt_venda'];
 
-$id 	= $_REQUEST['txt_codigo'];
-
-$item 	= $_REQUEST['txt_item'];
-$estoque 	= $_REQUEST['txt_estoque'];
-$valor 	= $_REQUEST['txt_valor'];
+$produto 	= $_REQUEST['txt_produto'];
 $qtde 	= $_REQUEST['txt_qtde'];
+$preco 	= $_REQUEST['txt_preco'];
 $total 	= $_REQUEST['txt_total'];
 
-$sql = "update tb_itens_venda set 
-					ITE_CODIGO = '$item',
-					EST_CODIGO = '$estoque',
-					ITE_VALOR_UNIT = '$valor', 
-					ITE_QTDE = '$qtde', 
-					ITE_TOTAL = '$total'
-				where 
-					ITE_CODIGO = '$id'";
-								
+	
+
+$sql = "insert into tb_itens_venda (ven_codigo, pro_codigo, itv_qtde, itv_preco, itv_total) 
+								values ('$venda', '$produto', '$qtde', '$preco', '$total')";
+
 mysqli_query($con, $sql) or die ("Erro na sql!") ;
 
-header("Location: ../html/consulta_itens.php");
+// Após o processamento do cadastro
+$_SESSION['success_message'] = "Cadastro realizado com sucesso!";
+header("Location: ../form_atualizar_itens_venda.php?venda=$venda"); // Redireciona para a página de destino
+exit(); // Certifique-se de parar a execução do script após o redirecionamento
+
 
 ?>
+

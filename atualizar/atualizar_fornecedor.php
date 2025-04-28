@@ -8,13 +8,15 @@ $descricao 	= $_REQUEST['txt_descricao'];
 $email 	= $_REQUEST['txt_email'];
 $telefone 	= $_REQUEST['txt_telefone'];
 $celular 	= $_REQUEST['txt_celular'];
+$cnpj       = $_REQUEST['txt_cnpj'];
 
 $sql = "update tb_fornecedores set 
 					for_nome = '$nome', 
 					for_descricao = '$descricao', 
 					for_email = '$email',
 					for_telefone = '$telefone',
-					for_celular = '$celular'
+					for_celular = '$celular',
+					for_cnpj    = '$cnpj'
 				where 
 					for_codigo = '$id'";
 								

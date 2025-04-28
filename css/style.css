@@ -229,7 +229,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   --info: #50E3C2;
   --warning: #FFAA16;
   --danger: #FF1616;
-  --light: #f8f9fa;
+  --light: #e9e9e9;
   --dark: #454545;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
@@ -8060,11 +8060,12 @@ a {
   position: absolute;
   left: 0;
   top: 0;
-  background-color: #343957;
+  background-color: #006f4c;
   transition: all .2s ease;
   z-index: 4; }
   .nav-header .logo-abbr {
-    max-width: 30px; }
+    max-width: 50px;
+    margin-right: 0px; }
   .nav-header .logo-compact {
     display: none; }
   @media only screen and (min-width: 1800px) {
@@ -8135,7 +8136,7 @@ a {
   z-index: 999; }
 
 .hamburger .line {
-  background: #593bdb;
+  background: #006f4c;
   display: block;
   height: 2px;
   margin-top: 6px;
@@ -10315,7 +10316,7 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
   top: 5rem;
   padding-top: 0;
   z-index: 2;
-  background-color: #343957;
+  background-color: #006f4c;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
   transition: all .2s ease; }
   .quixnav .quixnav-scroll {
@@ -10348,9 +10349,9 @@ html[dir="rtl"] [direction="rtl"][data-sidebar-style="compact"]:not([data-layout
         position: relative;
         top: -2px; }
       .quixnav .metismenu > li > a {
-        color: #bdbdc7; }
+        color: #fff; }
       .quixnav .metismenu > li:hover > a, .quixnav .metismenu > li:focus > a, .quixnav .metismenu > li.mm-active > a {
-        background-color: #6b51df;
+        background-color: #f48634;
         color: #fff; }
       .quixnav .metismenu > li.mm-active ul {
         background-color: rgba(88, 115, 254, 0.04); }
@@ -10648,7 +10649,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
     padding-right: 0;
     justify-content: center; }
   [data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .nav-header .nav-control .hamburger .line {
-    background-color: #593bdb !important; }
+    background-color: #006f4c !important; }
 
 [data-sidebar-style="full"][data-layout="vertical"] .menu-toggle .header {
   padding-left: 3.75rem;
@@ -10749,7 +10750,7 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
       [data-sidebar-style="mini"] .nav-header .nav-control .hamburger {
         left: 3.75rem !important; }
         [data-sidebar-style="mini"] .nav-header .nav-control .hamburger .line {
-          background-color: #454545 !important; }
+          background-color: #006f4c !important; }
     [data-sidebar-style="mini"] .nav-header .brand-title {
       display: none; }
     [data-sidebar-style="mini"] .nav-header .hamburger {
